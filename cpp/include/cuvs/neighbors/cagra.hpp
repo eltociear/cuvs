@@ -283,9 +283,7 @@ struct index : cuvs::neighbors::index {
                  "Dataset and knn_graph must have equal number of rows");
     update_graph(res, knn_graph);
 
-    printf("Called update_graph\n");
     raft::resource::sync_stream(res);
-    printf("Done syncing\n");
   }
 
   /**
@@ -356,7 +354,6 @@ struct index : cuvs::neighbors::index {
   {
     RAFT_LOG_DEBUG("Copying CAGRA knn graph from host to device");
 
-    printf("Copying graph...\n");
     if ((graph_.extent(0) != knn_graph.extent(0)) || (graph_.extent(1) != knn_graph.extent(1))) {
       // clear existing memory before allocating to prevent OOM errors on large graphs
       if (graph_.size()) { graph_ = raft::make_device_matrix<IdxT, int64_t>(res, 0, 0); }
@@ -368,7 +365,6 @@ struct index : cuvs::neighbors::index {
                knn_graph.size(),
                raft::resource::get_cuda_stream(res));
     graph_view_ = graph_.view();
-    printf("Done...\n");
   }
 
  private:
