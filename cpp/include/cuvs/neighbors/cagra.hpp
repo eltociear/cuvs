@@ -132,6 +132,21 @@ struct search_params : cuvs::neighbors::search_params {
 /**
  * @}
  */
+
+/**
+ * @defgroup cagra_cpp_extend_params CAGRA index extend parameters
+ * @{
+ */
+
+struct extend_params {
+  /** The additional dataset is divided into chunks and added to the graph. Large chunk sizes can
+   * result in high throughput, but may degrade recall. Auto select when 0.*/
+  uint32_t max_chunk_size = 0;
+};
+
+/**
+ * @}
+ */
 static_assert(std::is_aggregate_v<index_params>);
 static_assert(std::is_aggregate_v<search_params>);
 
@@ -503,9 +518,7 @@ void build_host(raft::resources const& handle,
  * @param[in] input_updated_dataset_view updated dataset (initial + additional dataset)
  * @param[in] index CAGRA index
  * @param[out] updated_graph_view updated graph
- * @param[in] chunk_size chunk size for graph update (default: 0 (AUTO)). The additional dataset is
- * divided into chunks and added to the graph. Large chunk sizes can result in high throughput, but
- * may degrade recall.
+ * @param[in] extend_params extend params
  */
 void add_graph_nodes(
   raft::resources const& handle,
@@ -513,7 +526,7 @@ void add_graph_nodes(
     updated_dataset_view,
   const cuvs::neighbors::cagra::index<float, uint32_t>& idx,
   raft::host_matrix_view<uint32_t, std::int64_t> updated_graph_view,
-  uint32_t chunk_size = 0);
+  const cagra::extend_params& params);
 
 void add_graph_nodes(
   raft::resources const& handle,
@@ -521,7 +534,7 @@ void add_graph_nodes(
     updated_dataset_view,
   const cuvs::neighbors::cagra::index<float, uint32_t>& idx,
   raft::host_matrix_view<uint32_t, std::int64_t> updated_graph_view,
-  uint32_t chunk_size = 0);
+  const cagra::extend_params& params);
 
 void add_graph_nodes(
   raft::resources const& handle,
@@ -529,7 +542,7 @@ void add_graph_nodes(
     updated_dataset_view,
   const cuvs::neighbors::cagra::index<int8_t, uint32_t>& idx,
   raft::host_matrix_view<uint32_t, std::int64_t> updated_graph_view,
-  uint32_t chunk_size = 0);
+  const cagra::extend_params& params);
 
 void add_graph_nodes(
   raft::resources const& handle,
@@ -537,7 +550,7 @@ void add_graph_nodes(
     updated_dataset_view,
   const cuvs::neighbors::cagra::index<int8_t, uint32_t>& idx,
   raft::host_matrix_view<uint32_t, std::int64_t> updated_graph_view,
-  uint32_t chunk_size = 0);
+  const cagra::extend_params& params);
 
 void add_graph_nodes(
   raft::resources const& handle,
@@ -545,7 +558,7 @@ void add_graph_nodes(
     updated_dataset_view,
   const cuvs::neighbors::cagra::index<uint8_t, uint32_t>& idx,
   raft::host_matrix_view<uint32_t, std::int64_t> updated_graph_view,
-  uint32_t chunk_size = 0);
+  const cagra::extend_params& params);
 
 void add_graph_nodes(
   raft::resources const& handle,
@@ -553,7 +566,7 @@ void add_graph_nodes(
     updated_dataset_view,
   const cuvs::neighbors::cagra::index<uint8_t, uint32_t>& idx,
   raft::host_matrix_view<uint32_t, std::int64_t> updated_graph_view,
-  uint32_t chunk_size = 0);
+  const cagra::extend_params& params);
 
 /**
  * @}
@@ -579,39 +592,37 @@ void add_graph_nodes(
  * @param[in] handle raft resources
  * @param[in] additional_dataset additional dataset
  * @param[in,out] index CAGRA index
- * @param[in] chunk_size chunk size for graph update (default: 0 (AUTO)). The additional dataset is
- * divided into chunks and added to the graph. Large chunk sizes can result in high throughput, but
- * may degrade recall.
+ * @param[in] extend_params extend params
  */
 void extend(raft::resources const& handle,
             raft::device_matrix_view<const float, int64_t, raft::row_major> additional_dataset,
             cuvs::neighbors::cagra::index<float, uint32_t>& idx,
-            uint32_t chunk_size = 0);
+            const cagra::extend_params& params);
 
 void extend(raft::resources const& handle,
             raft::host_matrix_view<const float, int64_t, raft::row_major> additional_dataset,
             cuvs::neighbors::cagra::index<float, uint32_t>& idx,
-            uint32_t chunk_size = 0);
+            const cagra::extend_params& params);
 
 void extend(raft::resources const& handle,
             raft::device_matrix_view<const int8_t, int64_t, raft::row_major> additional_dataset,
             cuvs::neighbors::cagra::index<int8_t, uint32_t>& idx,
-            uint32_t chunk_size = 0);
+            const cagra::extend_params& params);
 
 void extend(raft::resources const& handle,
             raft::host_matrix_view<const int8_t, int64_t, raft::row_major> additional_dataset,
             cuvs::neighbors::cagra::index<int8_t, uint32_t>& idx,
-            uint32_t chunk_size = 0);
+            const cagra::extend_params& params);
 
 void extend(raft::resources const& handle,
             raft::device_matrix_view<const uint8_t, int64_t, raft::row_major> additional_dataset,
             cuvs::neighbors::cagra::index<uint8_t, uint32_t>& idx,
-            uint32_t chunk_size = 0);
+            const cagra::extend_params& params);
 
 void extend(raft::resources const& handle,
             raft::host_matrix_view<const uint8_t, int64_t, raft::row_major> additional_dataset,
             cuvs::neighbors::cagra::index<uint8_t, uint32_t>& idx,
-            uint32_t chunk_size = 0);
+            const cagra::extend_params& params);
 /**
  * @}
  */
